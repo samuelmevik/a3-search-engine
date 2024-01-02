@@ -4,6 +4,7 @@ type FileReader = {
   delimiter?: string;
   skipRows?: number;
   skipColumns?: number;
+  skipEndRows?: number;
 };
 
 export default async function FileReader(

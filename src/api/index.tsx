@@ -1,5 +1,5 @@
 import { Elysia, t } from "elysia";
-import { search } from "../server/algorithms/search";
+import { search, test } from "../server/algorithms/search";
 
 const api = new Elysia({ prefix: "api" });
 
@@ -63,7 +63,7 @@ api.get('/search', async ({ query }) => {
   }
 )
 api.get('/', async () => {
-  return { hello: search("super mario") }
+  return { hello: test("super mario") }
 })
 
 export default api;

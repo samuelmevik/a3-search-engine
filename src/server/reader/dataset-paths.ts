@@ -45,11 +45,19 @@ export type ProcessedData = {
   links: string[];
 }
 
+async function processLinks(links: string) {
+  const file = Bun.file(links);
+  const content = (await FileReader(file)).flat()
+  return content.splice(0, content.length - 1)
+}
+
 const processedData: ProcessedData[] = await Promise.all(dataSet.map(async ({ name, category, wordDir, linkDir }) => ({
   name,
   category,
   words: (await FileReader(Bun.file(wordDir), { delimiter: ' ' })).flat(),
-  links: (await FileReader(Bun.file(linkDir), { delimiter: ' ' })).flat()
+  links: await processLinks(linkDir)
 })))
+
+
 
 export default processedData;

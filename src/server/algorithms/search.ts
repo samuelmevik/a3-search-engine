@@ -91,6 +91,16 @@ function normalize(scores: number[], smallIsBetter: boolean) {
 pageRankMetric(pageDB.Pages())
 const pageRanks = normalize(pageDB.Pages().map(page => page.pageRank), true)
 
+export function test(q: string) {
+  const words = pageDB.getIdsForWords(intoWords(q));
+  const pages = pageDB.Pages();
+  return pages.map(page => ({
+    pageName : page.Name,
+    links : [...page.Links.values()]
+  }))
+}
+
+
 export function search(q: string) {
   const words = pageDB.getIdsForWords(intoWords(q));
   const pages = pageDB.Pages();
