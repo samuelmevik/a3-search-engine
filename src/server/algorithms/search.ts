@@ -8,8 +8,6 @@ const NOT_FOUND = 100_000
 const NOT_FOUND_SCORE = 0.001
 const RANK_ITER = 20
 
-
-
 function intoWords(q: string) {
   return q.split(' ').filter(word => word.length > 0);
 }
@@ -65,11 +63,11 @@ function wordDistanceMetric(query: (number | undefined)[], page: Page) {
 }*/
 
 
-function adjustedScores(pages: Page[], frequency: number[], location: number[], distance: number[]) {
+function adjustedScores(pages: Page[], frequency: number[], location: number[], prank: number[]) {
   return pages.map((page, i) => {
     const content = frequency[i]
     const loc = location[i] * 0.8
-    const rank = distance[i] * 0.5
+    const rank = prank[i] * 0.5
     return {
       page,
       score: content + loc + rank,
@@ -98,7 +96,6 @@ export function search(q: string) {
   const pages = pageDB.Pages();
 
   const content = [], location = [];
-
   for (const page of pages) {
     content.push(wordFrequencyMetric(words, page))
     location.push(documentLocationMetric(words, page))

@@ -39,8 +39,6 @@ pages.get('/', async () => {
               </tr>
             </table>
           </div>
-
-
         </Box>
       </body>
     </BaseHTML>

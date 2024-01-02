@@ -26,7 +26,6 @@ const data = await Promise.all(categoriesNames.map(async category => {
   return { wordDirs, linkDirs, category }
 }))
 
-
 const dataSet = data.flatMap(({ wordDirs, linkDirs, category }) =>
   wordDirs.map((wordDir, i) => (
     {
