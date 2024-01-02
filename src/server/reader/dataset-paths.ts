@@ -1,19 +1,56 @@
+import { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
+import FileReader from "./reader";
+
+const base = 'src/server/data-set';
 
 async function getPaths(dir: string) {
-  const dirents = await readdir(dir, { withFileTypes: true });
+  return await readdir(dir, { withFileTypes: true });
+}
+
+function direntsToPaths(dir: string, dirents: Dirent[]) {
   return dirents.map((dirent) => join(dir, dirent.name));
 }
 
-const base = 'src/server/data-set';
-//games: await getPaths(`${base}/Links/Games`),
-//programming: await getPaths(`${base}/Links/Programming`),
-const datasetPaths = {
-  links: [...await getPaths(`${base}/Links/Games`), ...await getPaths(`${base}/Links/Programming`)],
-  words: [...await getPaths(`${base}/Words/Games`), ...await getPaths(`${base}/Words/Programming`)],
+function toFileNames(path: string) {
+  return path.split('/').pop();
 }
 
-Object.freeze(datasetPaths);
+const categoriesPath = await getPaths(`${base}/Words`);
+const categoriesNames = categoriesPath.map(path => path.name);
 
-export default datasetPaths;
+const data = await Promise.all(categoriesNames.map(async category => {
+  const wordDirs = direntsToPaths(`${base}/Words/${category}`, await getPaths(`${base}/Words/${category}`));
+  const linkDirs = direntsToPaths(`${base}/Links/${category}`, await getPaths(`${base}/Links/${category}`));
+  return { wordDirs, linkDirs, category }
+}))
+
+
+const dataSet = data.flatMap(({ wordDirs, linkDirs, category }) =>
+  wordDirs.map((wordDir, i) => (
+    {
+      wordDir,
+      linkDir: linkDirs[i],
+      category,
+      name: toFileNames(wordDir)!
+    }
+  )
+  )
+)
+
+export type ProcessedData = {
+  name: string;
+  category: string;
+  words: string[];
+  links: string[];
+}
+
+const processedData: ProcessedData[] = await Promise.all(dataSet.map(async ({ name, category, wordDir, linkDir }) => ({
+  name,
+  category,
+  words: (await FileReader(Bun.file(wordDir), { delimiter: ' ' })).flat(),
+  links: (await FileReader(Bun.file(linkDir), { delimiter: ' ' })).flat()
+})))
+
+export default processedData;

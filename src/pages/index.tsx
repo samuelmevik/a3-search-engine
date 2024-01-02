@@ -4,6 +4,7 @@ import Box from "../compontents/Box";
 
 const pages = new Elysia();
 
+
 pages.get('/', async () => {
   return (
     <BaseHTML>
@@ -20,9 +21,26 @@ pages.get('/', async () => {
             />
             <button type="submit">Submit!</button>
           </form>
-          <ul id="search-result">
-            <li>No content to show</li>
-          </ul>
+
+          <div id="search-result">
+            <table>
+              <tr>
+                <th>Link</th>
+                <th>Score</th>
+                <th>Content</th>
+                <th>Locatation</th>
+              </tr>
+            </table>
+
+            <table>
+              <tr>
+                <th>count</th>
+                <th>time</th>
+              </tr>
+            </table>
+          </div>
+
+
         </Box>
       </body>
     </BaseHTML>
