@@ -75,7 +75,7 @@ function normalize(scores: number[], smallIsBetter: boolean) {
 }
 
 pageRankMetric(pageDB.Pages())
-
+const pageRanks = normalize(pageDB.Pages().map(entry => entry.pageRank), false)
 
 export function test(q: string) {
   const pages = pageDB.Pages();
@@ -98,7 +98,7 @@ export function search(q: string) {
 
   const frequencyScore = normalize(content, false)
   const locationScore = normalize(location, true)
-  const pageRanks = normalize(pages.map(entry => entry.pageRank), false)
+  
 
   return adjustedScores(pages, frequencyScore, locationScore, pageRanks)
     .filter(entry => entry.score > NOT_FOUND_SCORE + entry.pageRank)
