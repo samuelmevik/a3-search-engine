@@ -33,7 +33,15 @@ function locationScore<T>(word: number, words: T[]) {
 
 function pageRankMetric(pages: Page[]) {
   for (let i = 0; i < RANK_ITER; i++) {
-    pages.forEach(page => page.pageRank = iteratePageRank(page, pages))
+    /*
+    const tempRanks = pages.map(page => iteratePageRank(page, pages))
+    for (let j = 0; j < pages.length; j++) {
+      pages[j].pageRank = tempRanks[j]
+    }*/
+
+    for (const page of pages) {
+      page.pageRank = iteratePageRank(page, pages)
+    }
   }
 }
 
@@ -81,7 +89,6 @@ function adjustedScores(pages: Page[], frequency: number[], location: number[], 
 function normalize(scores: number[], smallIsBetter: boolean) {
   if (smallIsBetter) {
     const min = Math.min(...scores)
-    console.log(min)
     return scores.map(score => min / Math.max(score, NOT_FOUND_SCORE))
   }
   const max = Math.max(...scores, NOT_FOUND_SCORE)
@@ -92,11 +99,11 @@ pageRankMetric(pageDB.Pages())
 const pageRanks = normalize(pageDB.Pages().map(page => page.pageRank), true)
 
 export function test(q: string) {
-  const words = pageDB.getIdsForWords(intoWords(q));
   const pages = pageDB.Pages();
   return pages.map(page => ({
-    pageName : page.Name,
-    links : [...page.Links.values()]
+    pageName: page.Name,
+    links: [...page.Links.values()],
+    "un-normilizedScore": page.pageRank
   }))
 }
 
@@ -115,6 +122,6 @@ export function search(q: string) {
   const locationScore = normalize(location, true)
 
   return adjustedScores(pages, frequencyScore, locationScore, pageRanks)
-    .filter(entry => entry.score > NOT_FOUND_SCORE)
+    .filter(entry => entry.score > NOT_FOUND_SCORE + entry.pageRank)
     .sort((a, b) => b.score - a.score)
 }

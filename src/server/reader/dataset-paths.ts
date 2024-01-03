@@ -51,10 +51,15 @@ async function processLinks(links: string) {
   return content.splice(0, content.length - 1)
 }
 
+async function processWords(links: string) {
+  const file = Bun.file(links);
+  return (await FileReader(file, { delimiter: ' ' })).flat()
+}
+
 const processedData: ProcessedData[] = await Promise.all(dataSet.map(async ({ name, category, wordDir, linkDir }) => ({
   name,
   category,
-  words: (await FileReader(Bun.file(wordDir), { delimiter: ' ' })).flat(),
+  words: await processWords(wordDir),
   links: await processLinks(linkDir)
 })))
 
