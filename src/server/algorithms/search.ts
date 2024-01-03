@@ -31,14 +31,8 @@ function locationScore<T>(word: number, words: T[]) {
   return NOT_FOUND
 }
 
-function pageRankMetric(pages: Page[]) {
-  for (let i = 0; i < RANK_ITER; i++) {
-    /*
-    const tempRanks = pages.map(page => iteratePageRank(page, pages))
-    for (let j = 0; j < pages.length; j++) {
-      pages[j].pageRank = tempRanks[j]
-    }*/
-
+function pageRankMetric(pages: Page[], iterations = RANK_ITER) {
+  for (let i = 0; i < iterations; i++) {
     for (const page of pages) {
       page.pageRank = iteratePageRank(page, pages)
     }
@@ -54,21 +48,6 @@ function iteratePageRank(page: Page, pages: Page[]) {
   }
   return 0.85 * rank + 0.15
 }
-
-/*
-function wordDistanceMetric(query: (number | undefined)[], page: Page) {
-  let score = 0
-  for (let i = 0; i < query.length - 1; i++) {
-    const locA = locationScore(query[i]!, page.Words)
-    const locB = locationScore(query[i + 1]!, page.Words)
-    if (locA === MAX_DISTANCE || locB === MAX_DISTANCE) {
-      score += MAX_DISTANCE
-    } else {
-      score += Math.abs(locA - locB)
-    }
-  }
-  return score
-}*/
 
 
 function adjustedScores(pages: Page[], frequency: number[], location: number[], prank: number[]) {
@@ -96,7 +75,7 @@ function normalize(scores: number[], smallIsBetter: boolean) {
 }
 
 pageRankMetric(pageDB.Pages())
-const pageRanks = normalize(pageDB.Pages().map(page => page.pageRank), true)
+
 
 export function test(q: string) {
   const pages = pageDB.Pages();
@@ -104,9 +83,8 @@ export function test(q: string) {
     pageName: page.Name,
     links: [...page.Links.values()],
     "un-normilizedScore": page.pageRank
-  }))
+  })).sort((a, b) => b["un-normilizedScore"] - a["un-normilizedScore"])
 }
-
 
 export function search(q: string) {
   const words = pageDB.getIdsForWords(intoWords(q));
@@ -120,6 +98,7 @@ export function search(q: string) {
 
   const frequencyScore = normalize(content, false)
   const locationScore = normalize(location, true)
+  const pageRanks = normalize(pages.map(entry => entry.pageRank), false)
 
   return adjustedScores(pages, frequencyScore, locationScore, pageRanks)
     .filter(entry => entry.score > NOT_FOUND_SCORE + entry.pageRank)

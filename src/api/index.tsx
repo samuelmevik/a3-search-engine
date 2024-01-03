@@ -14,7 +14,7 @@ api.get('/search', async ({ query }) => {
   }
   const start = Date.now()
   const pages = search(q)
-  const result = pages.slice(0, limit || 10)
+  const result = pages.slice(0, limit || 5)
   const count = pages.reduce((acc) => acc + 1, 0)
   const time = Date.now() - start + 'ms';
 
