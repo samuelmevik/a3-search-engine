@@ -14,16 +14,19 @@ pages.get('/', async () => {
             hx-get="api/search"
             hx-target="#search-result"
           >
-            <input type="search" name="q"
-              hx-get="api/search?limit=3"
-              hx-trigger="keyup changed delay:500ms"
-              hx-target="#search-result"
-            />
-            <button type="submit">Submit!</button>
+            <div class="flex justify-between">
+              <input type="search" name="q"
+                hx-get="api/search?limit=3"
+                hx-trigger="keyup changed delay:500ms"
+                hx-target="#search-result"
+                class="border border-gray-300 rounded-md p-2"
+              />
+              <button class="border border-gray-300 rounded-md p-2" type="submit">Submit!</button>
+            </div>
           </form>
 
           <div id="search-result">
-            <table>
+            <table class="table-auto w-full">
               <tr>
                 <th>Link</th>
                 <th>Score</th>

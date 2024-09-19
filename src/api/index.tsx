@@ -1,10 +1,10 @@
 import { Elysia, t } from "elysia";
-import { search, test } from "../server/algorithms/search";
+import { search } from "../server/algorithms/search";
 
 const api = new Elysia({ prefix: "api" });
 
 
-api.get('/search', async ({ query }) => {
+api.get('/search', async ({ query }: { query: { q: string, limit?: number } }) => {
   const { q, limit } = query;
   console.log({ q, limit })
   if (q.length < 3) {
@@ -26,7 +26,7 @@ api.get('/search', async ({ query }) => {
 
   return (
     <>
-      <table>
+      <table class="table-auto w-full">
         <tr>
           <th>Link</th>
           <th>Score</th>
@@ -34,8 +34,9 @@ api.get('/search', async ({ query }) => {
           <th>Locatation</th>
           <th>PageRank</th>
         </tr>
-        {result.map((entry) => <tr>
-          <td>{entry.page._name}</td>
+        {result.map((entry) => <tr class="text-center">
+          <td class="text-left">
+          <a class="text-blue-400" href={`https://sv.wikipedia.org/wiki/${entry.shortName}`}>{entry.shortName}</a></td>
           <td>{Math.round((entry.score + Number.EPSILON) * 100) / 100}</td>
           <td>{Math.round((entry.content + Number.EPSILON) * 100) / 100}</td>
           <td>{Math.round((entry.location + Number.EPSILON) * 100) / 100}</td>
@@ -62,8 +63,5 @@ api.get('/search', async ({ query }) => {
     })
   }
 )
-api.get('/', async () => {
-  return { hello: test("super mario") }
-})
 
 export default api;
