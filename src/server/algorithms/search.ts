@@ -55,8 +55,11 @@ function adjustedScores(pages: Page[], frequency: number[], location: number[], 
     const content = frequency[i]
     const loc = location[i] * 0.8
     const rank = prank[i] * 0.5
+    const split = page.Name.split('\\')
+    const name = split[split.length - 1]
     return {
       page,
+      shortName: name,
       score: content + loc + rank,
       content: content,
       location: loc,
@@ -77,14 +80,6 @@ function normalize(scores: number[], smallIsBetter: boolean) {
 pageRankMetric(pageDB.Pages())
 const pageRanks = normalize(pageDB.Pages().map(entry => entry.pageRank), false)
 
-export function test(q: string) {
-  const pages = pageDB.Pages();
-  return pages.map(page => ({
-    pageName: page.Name,
-    links: [...page.Links.values()],
-    "un-normilizedScore": page.pageRank
-  })).sort((a, b) => b["un-normilizedScore"] - a["un-normilizedScore"])
-}
 
 export function search(q: string) {
   const words = pageDB.getIdsForWords(intoWords(q));
