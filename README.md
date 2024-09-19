@@ -18,7 +18,7 @@ A search engine for Wikipedia articles, leveraging algorithms to deliver the mos
 
 The **A3 Search Engine** is a website designed to index and search through Wikipedia articles with high efficiency and accuracy. Implementing ranking algorithms, including PageRank, it ensures users receive the most relevant search results based on their queries.
 
-![A3 Search Engine](.readme\animation.gif)
+![A3 Search Engine](./.readme\animation.gif)
 
 This project fulfills all requirements up to Grade A, as specified in the assignment guidelines [assignment](https://coursepress.lnu.se/courses/web-intelligence/assignments/a3).
 
