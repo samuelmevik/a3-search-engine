@@ -5,9 +5,9 @@ import pages from "./pages";
 
 const app = new Elysia().use(html());
 
-app.use(pages)
+app.use(pages);
 
-app.use(api)
+app.use(api);
 
 app.listen(3000);
 
