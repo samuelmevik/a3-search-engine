@@ -74,6 +74,14 @@ Run the server in development mode with hot reloading:
 bun dev
 ```
 
+Alternatively, you can start the application using Docker:
+
+```bash
+docker compose up
+```
+
+This will create a containerized environment and run the application.
+
 ### Accessing the Web Client
 
 Open your preferred web browser and navigate to:
